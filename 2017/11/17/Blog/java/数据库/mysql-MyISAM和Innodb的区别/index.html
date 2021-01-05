@@ -1,0 +1,111 @@
+<!DOCTYPE html><html lang="zh-tw"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="mysql-MyISAM和Innodb的区别"><meta name="keywords" content="mysql,MyISAM,Innodb,行锁,表锁,死锁"><meta name="author" content="Jia Xufeng"><meta name="copyright" content="Jia Xufeng"><title>mysql-MyISAM和Innodb的区别 | 暗夜精灵のBlog</title><link rel="shortcut icon" href="http://image.icool8.cn/blog/20200618/tlIPrUJYHhnI.png?imageslim"><link rel="stylesheet" href="/css/index.css?version=1.7.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.7.0"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  }
+} </script><meta name="generator" content="Hexo 5.3.0"></head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD%E5%B7%AE%E5%BC%82"><span class="toc-number">1.1.</span> <span class="toc-text">功能差异</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E5%B7%AE%E5%BC%82"><span class="toc-number">1.2.</span> <span class="toc-text">存储差异</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%89%E6%8B%A9%E4%BE%9D%E6%8D%AE"><span class="toc-number">1.3.</span> <span class="toc-text">选择依据</span></a></li></ol></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="http://image.icool8.cn/blog/20200618/tlIPrUJYHhnI.png?imageslim"></div><div class="author-info__name text-center">Jia Xufeng</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">85</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">83</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">29</span></a></div></div></div><div id="content-outer"><div class="no-bg" id="top-container"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">暗夜精灵のBlog</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">主页</a><a class="site-page" href="/archives">文章</a><a class="site-page" href="/tags">标签</a><a class="site-page" href="/categories">分类</a></span><span class="pull-right"></span></div><div id="post-info"><div id="post-title">mysql-MyISAM和Innodb的区别</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2017-11-17</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/">mysql</a></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><blockquote>
+<p>早期问题：如何选择MyISAM和Innodb？</p>
+<p>现在不存在这个问题了，Innodb不断完善，从各个方面赶超MyISAM，也是MySQL默认使用的。</p>
+</blockquote>
+<p>存储引擎Storage engine：MySQL中的数据、索引以及其他对象是如何存储的，是一套文件系统的实现。</p>
+<h2 id="功能差异"><a href="#功能差异" class="headerlink" title="功能差异"></a>功能差异</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show engines</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>Engine</th>
+<th>Support</th>
+<th>Comment</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>InnoDB</td>
+<td>DEFAULT</td>
+<td><strong>Supports transactions, row-level locking, and foreign keys</strong></td>
+</tr>
+<tr>
+<td>MyISAM</td>
+<td>YES</td>
+<td><strong>MyISAM storage engine</strong></td>
+</tr>
+</tbody></table>
+<a id="more"></a>
+
+<h2 id="存储差异"><a href="#存储差异" class="headerlink" title="存储差异"></a>存储差异</h2><table>
+<thead>
+<tr>
+<th></th>
+<th>MyISAM</th>
+<th>Innodb</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>文件格式</td>
+<td>数据和索引是分别存储的，数据<code>.MYD</code>，索引<code>.MYI</code></td>
+<td>数据和索引是集中存储的，<code>.ibd</code></td>
+</tr>
+<tr>
+<td>文件能否移动</td>
+<td>能，一张表就对应<code>.frm</code>、<code>MYD</code>、<code>MYI</code>3个文件</td>
+<td>否，因为关联的还有<code>data</code>下的其它文件</td>
+</tr>
+<tr>
+<td>记录存储顺序</td>
+<td>按记录插入顺序保存</td>
+<td>按主键大小有序插入</td>
+</tr>
+<tr>
+<td>空间碎片（删除记录并<code>flush table 表名</code>之后，表文件大小不变）</td>
+<td>产生。定时整理：使用命令<code>optimize table 表名</code>实现</td>
+<td>不产生</td>
+</tr>
+<tr>
+<td>事务</td>
+<td>不支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>外键</td>
+<td>不支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>锁支持（锁是避免资源争用的一个机制，MySQL锁对用户几乎是透明的）</td>
+<td>表级锁定</td>
+<td>行级锁定、表级锁定，锁定力度小并发能力高</td>
+</tr>
+</tbody></table>
+<p><strong>锁扩展</strong></p>
+<blockquote>
+<p>表级锁（<code>table-level lock</code>）：<code>lock tables &lt;table_name1&gt;,&lt;table_name2&gt;... read/write</code>，<code>unlock tables &lt;table_name1&gt;,&lt;table_name2&gt;...</code>。其中<code>read</code>是共享锁，一旦锁定任何客户端都不可读；<code>write</code>是独占/写锁，只有加锁的客户端可读可写，其他客户端既不可读也不可写。锁定的是一张表或几张表。</p>
+<p>行级锁（<code>row-level lock</code>）：锁定的是一行或几行记录。共享锁：<code>select * from &lt;table_name&gt; where &lt;条件&gt; LOCK IN SHARE MODE;</code>，对查询的记录增加共享锁；<code>select * from &lt;table_name&gt; where &lt;条件&gt; FOR UPDATE;</code>，对查询的记录增加排他锁。这里<strong>值得注意</strong>的是：<code>innodb</code>的行锁，其实是一个子范围锁，依据条件锁定部分范围，而不是就映射到具体的行上，因此还有一个学名：间隙锁。比如<code>select * from stu where id &lt; 20 LOCK IN SHARE MODE</code>会锁定<code>id</code>在<code>20</code>左右以下的范围，你可能无法插入<code>id</code>为<code>18</code>或<code>22</code>的一条新纪录。</p>
+<p>由于Innodb是 row-level lock，所以只有当指定主键ID是才能正常生效，否则锁定整张表，例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt;#(无主键，table lock)</span><br><span class="line">SELECT * FROM products WHERE name&#x3D;&#39;Mouse&#39; FOR UPDATE;</span><br><span class="line">#(主键不明确，table lock)</span><br><span class="line">SELECT * FROM products WHERE id&lt;&gt;&#39;3&#39; FOR UPDATE;</span><br><span class="line">#(主键不明确，table lock)</span><br><span class="line">SELECT * FROM products WHERE id LIKE &#39;3&#39; FOR UPDATE;</span><br></pre></td></tr></table></figure>
+
+
+<ul>
+<li><p>共享锁：如果事务T对数据A加上共享锁后，则其他事务只能对A再加共享锁，不能加排他锁。获准共享锁的事务只能读数据，不能修改数据。</p>
+</li>
+<li><p>排他锁：如果事务T对数据A加上排他锁后，则其他事务不能再对A加任任何类型的封锁。获准排他锁的事务既能读数据，又能修改数据。</p>
+</li>
+</ul>
+<p>为什么会发生死锁?</p>
+<p>若干事务相互等待释放封锁，就陷入无限期等待状态，系统就进入死锁</p>
+<p>解决死锁的主要方法是什么?</p>
+<ul>
+<li>要求每一个事务必须一次封锁所要使用的全部数据（要么全成功，要么全不成功）</li>
+<li>规定封锁数据的顺序，所有事务必须按这个顺序实行封锁。</li>
+<li>死锁发生时，则将其中一个代价较小的事物撤消，回滚这个事务，并释放此事务持有的封锁，使其他事务继续运行。</li>
+</ul>
+</blockquote>
+<h2 id="选择依据"><a href="#选择依据" class="headerlink" title="选择依据"></a>选择依据</h2><p>如果没有特别的需求，使用默认的<code>Innodb</code>即可。</p>
+<p>MyISAM：以读写插入为主的应用程序，比如博客系统、新闻门户网站。</p>
+<p>Innodb：更新（删除）操作频率也高，或者要保证数据的完整性；并发量高，支持事务和外键保证数据完整性。比如OA自动化办公系统。</p>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">Jia Xufeng</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://icool8.cn/2017/11/17/Blog/java/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql-MyISAM%E5%92%8CInnodb%E7%9A%84%E5%8C%BA%E5%88%AB/">https://icool8.cn/2017/11/17/Blog/java/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql-MyISAM%E5%92%8CInnodb%E7%9A%84%E5%8C%BA%E5%88%AB/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/mysql/">mysql</a><a class="post-meta__tags" href="/tags/MyISAM/">MyISAM</a><a class="post-meta__tags" href="/tags/Innodb/">Innodb</a><a class="post-meta__tags" href="/tags/%E8%A1%8C%E9%94%81/">行锁</a><a class="post-meta__tags" href="/tags/%E8%A1%A8%E9%94%81/">表锁</a><a class="post-meta__tags" href="/tags/%E6%AD%BB%E9%94%81/">死锁</a></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2017/11/18/Blog/java/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql-%E7%B4%A2%E5%BC%95/"><i class="fa fa-chevron-left">  </i><span>mysql-索引</span></a></div><div class="next-post pull-right"><a href="/2017/11/10/Blog/java/%E6%95%B0%E6%8D%AE%E5%BA%93/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8B+%E6%A0%91/"><span>数据库索引为什么使用B+树</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2021 By Jia Xufeng</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.7.0"></script><script src="/js/fancybox.js?version=1.7.0"></script><script src="/js/sidebar.js?version=1.7.0"></script><script src="/js/copy.js?version=1.7.0"></script><script src="/js/fireworks.js?version=1.7.0"></script><script src="/js/transition.js?version=1.7.0"></script><script src="/js/scroll.js?version=1.7.0"></script><script src="/js/head.js?version=1.7.0"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script></body></html>

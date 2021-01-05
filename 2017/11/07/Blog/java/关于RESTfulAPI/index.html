@@ -1,0 +1,119 @@
+<!DOCTYPE html><html lang="zh-tw"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="关于RESTfulAPI"><meta name="keywords" content="RESTful"><meta name="author" content="Jia Xufeng"><meta name="copyright" content="Jia Xufeng"><title>关于RESTfulAPI | 暗夜精灵のBlog</title><link rel="shortcut icon" href="http://image.icool8.cn/blog/20200618/tlIPrUJYHhnI.png?imageslim"><link rel="stylesheet" href="/css/index.css?version=1.7.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.7.0"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  }
+} </script><meta name="generator" content="Hexo 5.3.0"></head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E9%87%8D%E8%A6%81%E6%A6%82%E5%BF%B5"><span class="toc-number">1.</span> <span class="toc-text">一、重要概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81REST-%E6%8E%A5%E5%8F%A3%E8%A7%84%E8%8C%83"><span class="toc-number">2.</span> <span class="toc-text">二、REST 接口规范</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1%E3%80%81%E5%8A%A8%E4%BD%9C"><span class="toc-number">2.1.</span> <span class="toc-text">1、动作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2%E3%80%81%E8%B7%AF%E5%BE%84%EF%BC%88%E6%8E%A5%E5%8F%A3%E5%91%BD%E5%90%8D%EF%BC%89"><span class="toc-number">2.2.</span> <span class="toc-text">2、路径（接口命名）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3%E3%80%81%E8%BF%87%E6%BB%A4%E4%BF%A1%E6%81%AF%EF%BC%88Filtering%EF%BC%89"><span class="toc-number">2.3.</span> <span class="toc-text">3、过滤信息（Filtering）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4%E3%80%81%E7%8A%B6%E6%80%81%E7%A0%81%EF%BC%88Status-Codes%EF%BC%89"><span class="toc-number">2.4.</span> <span class="toc-text">4、状态码（Status Codes）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89-HATEOAS"><span class="toc-number">3.</span> <span class="toc-text">三 HATEOAS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90"><span class="toc-number">4.</span> <span class="toc-text">文章推荐</span></a></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="http://image.icool8.cn/blog/20200618/tlIPrUJYHhnI.png?imageslim"></div><div class="author-info__name text-center">Jia Xufeng</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">85</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">83</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">29</span></a></div></div></div><div id="content-outer"><div class="no-bg" id="top-container"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">暗夜精灵のBlog</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">主页</a><a class="site-page" href="/archives">文章</a><a class="site-page" href="/tags">标签</a><a class="site-page" href="/categories">分类</a></span><span class="pull-right"></span></div><div id="post-info"><div id="post-title">关于RESTfulAPI</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2017-11-07</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/java/">java</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/java/RESTful/">RESTful</a></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><p><img src="http://image.icool8.cn/blog/20201206/IcoDnqenEioN.png?imageslim" alt="mark"></p>
+<p>RESTful API 是每个程序员都应该了解并掌握的基本知识，我们在开发过程中设计 API 的时候也应该至少要满足 RESTful API 的最基本的要求（比如接口中尽量使用名词，使用 POST 请求创建资源，DELETE 请求删除资源等等，示例：<code>GET /notes/id</code>：获取某个指定 id 的笔记的信息）。</p>
+<p><strong>RESTful API 可以你看到 url + http method 就知道这个 url 是干什么的，让你看到了 http 状态码（status code）就知道请求结果如何。</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GET    &#x2F;classes：列出所有班级</span><br><span class="line">POST   &#x2F;classes：新建一个班级</span><br></pre></td></tr></table></figure>
+<p>下面的内容只是介绍了我觉得关于 RESTful API 比较重要的一些东西，欢迎补充。</p>
+<h3 id="一、重要概念"><a href="#一、重要概念" class="headerlink" title="一、重要概念"></a>一、重要概念</h3><p>REST,即 <strong>REpresentational State Transfer</strong> 的缩写。这个词组的翻译过来就是”表现层状态转化”。这样理解起来甚是晦涩，实际上 REST 的全称是 <strong>Resource Representational State Transfer</strong> ，直白地翻译过来就是 <strong>“资源”在网络传输中以某种“表现形式”进行“状态转移”</strong> 。如果还是不能继续理解，请继续往下看，相信下面的讲解一定能让你理解到底啥是 REST 。</p>
+<p>我们分别对上面涉及到的概念进行解读，以便加深理解，不过实际上你不需要搞懂下面这些概念，也能看懂我下一部分要介绍到的内容。不过，为了更好地能跟别人扯扯 “RESTful API”我建议你还是要好好理解一下！</p>
+<ul>
+<li><strong>资源（Resource）</strong> ：我们可以把真实的对象数据称为资源。一个资源既可以是一个集合，也可以是单个个体。比如我们的班级 classes 是代表一个集合形式的资源，而特定的 class 代表单个个体资源。每一种资源都有特定的 URI（统一资源定位符）与之对应，如果我们需要获取这个资源，访问这个 URI 就可以了，比如获取特定的班级：<code>/class/12</code>。另外，资源也可以包含子资源，比如 <code>/classes/classId/teachers</code>：列出某个指定班级的所有老师的信息</li>
+<li><strong>表现形式（Representational）</strong>：”资源”是一种信息实体，它可以有多种外在表现形式。我们把”资源”具体呈现出来的形式比如 json，xml，image,txt 等等叫做它的”表现层/表现形式”。</li>
+<li><strong>状态转移（State Transfer）</strong> ：大家第一眼看到这个词语一定会很懵逼？内心 BB：这尼玛是啥啊？ 大白话来说 REST 中的状态转移更多地描述的服务器端资源的状态，比如你通过增删改查（通过 HTTP 动词实现）引起资源状态的改变。ps:互联网通信协议 HTTP 协议，是一个无状态协议，所有的资源状态都保存在服务器端。</li>
+</ul>
+<p>综合上面的解释，我们总结一下什么是 RESTful 架构：</p>
+<ol>
+<li>每一个 URI 代表一种资源；</li>
+<li>客户端和服务器之间，传递这种资源的某种表现形式比如 json，xml，image,txt 等等；</li>
+<li>客户端通过特定的 HTTP 动词，对服务器端资源进行操作，实现”表现层状态转化”。</li>
+</ol>
+<h3 id="二、REST-接口规范"><a href="#二、REST-接口规范" class="headerlink" title="二、REST 接口规范"></a>二、REST 接口规范</h3><h4 id="1、动作"><a href="#1、动作" class="headerlink" title="1、动作"></a>1、动作</h4><ul>
+<li>GET ：请求从服务器获取特定资源。举个例子：<code>GET /classes</code>（获取所有班级）</li>
+<li>POST ：在服务器上创建一个新的资源。举个例子：<code>POST /classes</code>（创建班级）</li>
+<li>PUT ：更新服务器上的资源（客户端提供更新后的整个资源）。举个例子：<code>PUT /classes/12</code>（更新编号为 12 的班级）</li>
+<li>DELETE ：从服务器删除特定的资源。举个例子：<code>DELETE /classes/12</code>（删除编号为 12 的班级）</li>
+<li>PATCH ：更新服务器上的资源（客户端提供更改的属性，可以看做作是部分更新），使用的比较少，这里就不举例子了。</li>
+</ul>
+<h4 id="2、路径（接口命名）"><a href="#2、路径（接口命名）" class="headerlink" title="2、路径（接口命名）"></a>2、路径（接口命名）</h4><p>路径又称”终点”（endpoint），表示 API 的具体网址。实际开发中常见的规范如下：</p>
+<ol>
+<li><strong>网址中不能有动词，只能有名词，API 中的名词也应该使用复数。</strong> 因为 REST 中的资源往往和数据库中的表对应，而数据库中的表都是同种记录的”集合”（collection）。<strong>如果 API 调用并不涉及资源（如计算，翻译等操作）的话，可以用动词。</strong> 比如：<code>GET /calculate?param1=11&amp;param2=33</code></li>
+<li>不用大写字母，建议用中杠 - 不用下杠 _ 比如邀请码写成 <code>invitation-code</code>而不是 <del>invitation_code</del></li>
+</ol>
+<p>Talk is cheap！来举个实际的例子来说明一下吧！现在有这样一个 API 提供班级（class）的信息，还包括班级中的学生和教师的信息，则它的路径应该设计成下面这样。</p>
+<p><strong>接口尽量使用名词，禁止使用动词。</strong> 下面是一些例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">GET    &#x2F;classes：列出所有班级</span><br><span class="line">POST   &#x2F;classes：新建一个班级</span><br><span class="line">GET    &#x2F;classes&#x2F;classId：获取某个指定班级的信息</span><br><span class="line">PUT    &#x2F;classes&#x2F;classId：更新某个指定班级的信息（一般倾向整体更新）</span><br><span class="line">PATCH  &#x2F;classes&#x2F;classId：更新某个指定班级的信息（一般倾向部分更新）</span><br><span class="line">DELETE &#x2F;classes&#x2F;classId：删除某个班级</span><br><span class="line">GET    &#x2F;classes&#x2F;classId&#x2F;teachers：列出某个指定班级的所有老师的信息</span><br><span class="line">GET    &#x2F;classes&#x2F;classId&#x2F;students：列出某个指定班级的所有学生的信息</span><br><span class="line">DELETE classes&#x2F;classId&#x2F;teachers&#x2F;ID：删除某个指定班级下的指定的老师的信息</span><br></pre></td></tr></table></figure>
+<p>反例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;getAllclasses</span><br><span class="line">&#x2F;createNewclass</span><br><span class="line">&#x2F;deleteAllActiveclasses</span><br></pre></td></tr></table></figure>
+<p>理清资源的层次结构，比如业务针对的范围是学校，那么学校会是一级资源:<code>/schools</code>，老师: <code>/schools/teachers</code>，学生: <code>/schools/students</code> 就是二级资源。</p>
+<h4 id="3、过滤信息（Filtering）"><a href="#3、过滤信息（Filtering）" class="headerlink" title="3、过滤信息（Filtering）"></a>3、过滤信息（Filtering）</h4><p>如果我们在查询的时候需要添加特定条件的话，建议使用 url 参数的形式。比如我们要查询 state 状态为 active 并且 name 为 guidegege 的班级：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET    &#x2F;classes?state&#x3D;active&amp;name&#x3D;guidegege</span><br></pre></td></tr></table></figure>
+<p>比如我们要实现分页查询：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET    &#x2F;classes?page&#x3D;1&amp;size&#x3D;10 &#x2F;&#x2F;指定第1页，每页10个数据</span><br></pre></td></tr></table></figure>
+<h4 id="4、状态码（Status-Codes）"><a href="#4、状态码（Status-Codes）" class="headerlink" title="4、状态码（Status Codes）"></a>4、状态码（Status Codes）</h4><p><strong>状态码范围：</strong></p>
+<table>
+<thead>
+<tr>
+<th>2xx：成功</th>
+<th>3xx：重定向</th>
+<th>4xx：客户端错误</th>
+<th>5xx：服务器错误</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>200 成功</td>
+<td>301 永久重定向</td>
+<td>400 错误请求</td>
+<td>500 服务器错误</td>
+</tr>
+<tr>
+<td>201 创建</td>
+<td>304 资源未修改</td>
+<td>401 未授权</td>
+<td>502 网关错误</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>403 禁止访问</td>
+<td>504 网关超时</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>404 未找到</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>405 请求方法不对</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="三-HATEOAS"><a href="#三-HATEOAS" class="headerlink" title="三 HATEOAS"></a>三 HATEOAS</h3><blockquote>
+<p><strong>RESTful 的极致是 hateoas ，但是这个基本不会在实际项目中用到。</strong></p>
+</blockquote>
+<p>上面是 RESTful API 最基本的东西，也是我们平时开发过程中最容易实践到的。实际上，RESTful API 最好做到 Hypermedia，即返回结果中提供链接，连向其他 API 方法，使得用户不查文档，也知道下一步应该做什么。</p>
+<p>比如，当用户向 api.example.com 的根目录发出请求，会得到这样一个文档。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;link&quot;: &#123;</span><br><span class="line">  &quot;rel&quot;:   &quot;collection https:&#x2F;&#x2F;www.example.com&#x2F;classes&quot;,</span><br><span class="line">  &quot;href&quot;:  &quot;https:&#x2F;&#x2F;api.example.com&#x2F;classes&quot;,</span><br><span class="line">  &quot;title&quot;: &quot;List of classes&quot;,</span><br><span class="line">  &quot;type&quot;:  &quot;application&#x2F;vnd.yourformat+json&quot;</span><br><span class="line">&#125;&#125;</span><br></pre></td></tr></table></figure>
+<p>上面代码表示，文档中有一个 link 属性，用户读取这个属性就知道下一步该调用什么 API 了。rel 表示这个 API 与当前网址的关系（collection 关系，并给出该 collection 的网址），href 表示 API 的路径，title 表示 API 的标题，type 表示返回类型 Hypermedia API 的设计被称为<a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/HATEOAS">HATEOAS</a>。</p>
+<p>在 Spring 中有一个叫做 HATEOAS 的 API 库，通过它我们可以更轻松的创建除符合 HATEOAS 设计的 API。</p>
+<h3 id="文章推荐"><a href="#文章推荐" class="headerlink" title="文章推荐"></a>文章推荐</h3><p><strong>RESTful API 介绍：</strong></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://restfulapi.net/">RESTful API Tutorial</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.ruanyifeng.com/blog/2014/05/RESTful_api.html">RESTful API 最佳指南</a>（阮一峰，这篇文章大部分内容来源）</li>
+<li>[<a target="_blank" rel="noopener" href="https://juejin.im/entry/59e460c951882542f578f2f0">译] RESTful API 设计最佳实践</a></li>
+<li><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000016313947">那些年，我们一起误解过的 REST</a></li>
+<li><a target="_blank" rel="noopener" href="https://phauer.com/2016/testing-RESTful-services-java-best-practices/">Testing RESTful Services in Java: Best Practices</a></li>
+</ul>
+<p><strong>Spring 中使用 HATEOAS：</strong></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/Snailclimb/JavaGuide/blob/master/docs/system-design/coding-way/a">在 Spring Boot 中使用 HATEOAS</a></li>
+<li><a target="_blank" rel="noopener" href="https://spring.io/guides/tutorials/classmarks/">Building REST services with Spring</a> (Spring 官网 )</li>
+<li><a target="_blank" rel="noopener" href="https://www.baeldung.com/spring-hateoas-tutorial">An Intro to Spring HATEOAS</a> （by <a target="_blank" rel="noopener" href="https://www.baeldung.com/author/baeldung/">baeldung</a>）</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/spring-projects/spring-hateoas-examples/tree/master/hypermedia">spring-hateoas-examples</a></li>
+<li><a target="_blank" rel="noopener" href="https://spring.io/projects/spring-hateoas#learn">Spring HATEOAS</a> (Spring 官网 )</li>
+</ul>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">Jia Xufeng</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://icool8.cn/2017/11/07/Blog/java/%E5%85%B3%E4%BA%8ERESTfulAPI/">https://icool8.cn/2017/11/07/Blog/java/%E5%85%B3%E4%BA%8ERESTfulAPI/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/RESTful/">RESTful</a></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2017/11/10/Blog/java/%E6%95%B0%E6%8D%AE%E5%BA%93/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8B+%E6%A0%91/"><i class="fa fa-chevron-left">  </i><span>数据库索引为什么使用B+树</span></a></div><div class="next-post pull-right"><a href="/2017/10/30/Blog/java/JVM%E8%99%9A%E6%8B%9F%E6%9C%BA/%EF%BC%88%E5%85%AB%EF%BC%89JVM%E8%B0%83%E4%BC%98-jstat%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8/"><span>（八）JVM调优-jstat工具的使用.</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2021 By Jia Xufeng</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.7.0"></script><script src="/js/fancybox.js?version=1.7.0"></script><script src="/js/sidebar.js?version=1.7.0"></script><script src="/js/copy.js?version=1.7.0"></script><script src="/js/fireworks.js?version=1.7.0"></script><script src="/js/transition.js?version=1.7.0"></script><script src="/js/scroll.js?version=1.7.0"></script><script src="/js/head.js?version=1.7.0"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script></body></html>

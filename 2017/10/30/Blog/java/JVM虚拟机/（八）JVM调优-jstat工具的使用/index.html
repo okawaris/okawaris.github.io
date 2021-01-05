@@ -1,0 +1,189 @@
+<!DOCTYPE html><html lang="zh-tw"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="（八）JVM调优-jstat工具的使用."><meta name="keywords" content="java,jvm"><meta name="author" content="Jia Xufeng"><meta name="copyright" content="Jia Xufeng"><title>（八）JVM调优-jstat工具的使用. | 暗夜精灵のBlog</title><link rel="shortcut icon" href="http://image.icool8.cn/blog/20200618/tlIPrUJYHhnI.png?imageslim"><link rel="stylesheet" href="/css/index.css?version=1.7.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.7.0"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  }
+} </script><meta name="generator" content="Hexo 5.3.0"></head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">一、前言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E7%94%A8%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">二、用法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1%E3%80%81%E5%8D%B0%E7%B1%BB%E5%8A%A0%E8%BD%BD%E7%BB%9F%E8%AE%A1-class"><span class="toc-number">2.1.</span> <span class="toc-text">1、印类加载统计-class</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2%E3%80%81%E7%BC%96%E8%AF%91%E7%BB%9F%E8%AE%A1-compiler"><span class="toc-number">2.2.</span> <span class="toc-text">2、编译统计-compiler</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3%E3%80%81%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%BB%9F%E8%AE%A1-gc"><span class="toc-number">2.3.</span> <span class="toc-text">3、垃圾回收统计-gc</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4%E3%80%81%E5%A0%86%E5%86%85%E5%AD%98%E7%BB%9F%E8%AE%A1-gccapacity"><span class="toc-number">2.4.</span> <span class="toc-text">4、堆内存统计-gccapacity</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4%E3%80%81%E6%96%B0%E7%94%9F%E4%BB%A3%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%BB%9F%E8%AE%A1-gcnew"><span class="toc-number">2.5.</span> <span class="toc-text">4、新生代垃圾回收统计-gcnew</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5%E3%80%81%E6%96%B0%E7%94%9F%E4%BB%A3%E5%86%85%E5%AD%98%E7%BB%9F%E8%AE%A1-gcnewcapacity"><span class="toc-number">2.6.</span> <span class="toc-text">5、新生代内存统计-gcnewcapacity</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6%E3%80%81%E8%80%81%E5%B9%B4%E4%BB%A3%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%BB%9F%E8%AE%A1-gcold"><span class="toc-number">2.7.</span> <span class="toc-text">6、老年代垃圾回收统计-gcold</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7%E3%80%81%E8%80%81%E5%B9%B4%E4%BB%A3%E5%86%85%E5%AD%98%E7%BB%9F%E8%AE%A1-gcoldcapacity"><span class="toc-number">2.8.</span> <span class="toc-text">7、老年代内存统计-gcoldcapacity</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8%E3%80%81%E5%85%83%E6%95%B0%E6%8D%AE%E7%A9%BA%E9%97%B4%E7%BB%9F%E8%AE%A1-gcmetacapacity"><span class="toc-number">2.9.</span> <span class="toc-text">8、元数据空间统计-gcmetacapacity</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#9%E3%80%81%E6%80%BB%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%BB%9F%E8%AE%A1-gcutil"><span class="toc-number">2.10.</span> <span class="toc-text">9、总垃圾回收统计-gcutil</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#10%E3%80%81JVM%E7%BC%96%E8%AF%91%E6%96%B9%E6%B3%95%E7%BB%9F%E8%AE%A1-printcompilation"><span class="toc-number">2.11.</span> <span class="toc-text">10、JVM编译方法统计-printcompilation</span></a></li></ol></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="http://image.icool8.cn/blog/20200618/tlIPrUJYHhnI.png?imageslim"></div><div class="author-info__name text-center">Jia Xufeng</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">85</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">83</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">29</span></a></div></div></div><div id="content-outer"><div class="no-bg" id="top-container"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">暗夜精灵のBlog</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">主页</a><a class="site-page" href="/archives">文章</a><a class="site-page" href="/tags">标签</a><a class="site-page" href="/categories">分类</a></span><span class="pull-right"></span></div><div id="post-info"><div id="post-title">（八）JVM调优-jstat工具的使用.</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2017-10-30</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/java/">java</a></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><h3 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h3><p>jstat命令可以查看堆内存各部分的使用量，以及加载类的数量。命令的格式如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jstat [-命令选项] [vmid] [间隔时间/毫秒] [查询次数]</span><br></pre></td></tr></table></figure>
+<h3 id="二、用法"><a href="#二、用法" class="headerlink" title="二、用法"></a>二、用法</h3><h4 id="1、印类加载统计-class"><a href="#1、印类加载统计-class" class="headerlink" title="1、印类加载统计-class"></a>1、印类加载统计-class</h4><ul>
+<li>-class打印类加载的情况.</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">^C[root@crmadapter logs]<span class="comment"># jstat -class 5274 1000 5</span></span><br><span class="line">Loaded  Bytes  Unloaded  Bytes     Time   </span><br><span class="line"> 12936 25356.0     1517  1776.0      45.12</span><br><span class="line"> 12936 25356.0     1517  1776.0      45.12</span><br><span class="line"> 12936 25356.0     1517  1776.0      45.12</span><br><span class="line"> 12936 25356.0     1517  1776.0      45.12</span><br><span class="line"> 12936 25356.0     1517  1776.0      45.12</span><br></pre></td></tr></table></figure>
+<p>说明：</p>
+<ul>
+<li>**Loaded:**加载class的数量</li>
+<li><strong>Bytes：</strong>所占用空间大小</li>
+<li><strong>Unloaded：</strong>未加载数量</li>
+<li>**Bytes:**未加载占用空间</li>
+<li><strong>Time：</strong>时间</li>
+</ul>
+<a id="more"></a>
+
+<h4 id="2、编译统计-compiler"><a href="#2、编译统计-compiler" class="headerlink" title="2、编译统计-compiler"></a>2、编译统计-compiler</h4><p>-compiler查看编译统计</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@crmadapter logs]<span class="comment"># jstat -compiler 5274 1000 5</span></span><br><span class="line">Compiled Failed Invalid   Time   FailedType FailedMethod</span><br><span class="line">    5513      2       0   107.92          1 org/apache/catalina/loader/WebappClassLoaderBase findResourceInternal</span><br><span class="line">    5513      2       0   107.92          1 org/apache/catalina/loader/WebappClassLoaderBase findResourceInternal</span><br><span class="line">    5513      2       0   107.92          1 org/apache/catalina/loader/WebappClassLoaderBase findResourceInternal</span><br><span class="line">    5513      2       0   107.92          1 org/apache/catalina/loader/WebappClassLoaderBase findResourceInternal</span><br><span class="line">    5513      2       0   107.92          1 org/apache/catalina/loader/WebappClassLoaderBase findResourceInternal</span><br><span class="line">[root@crmadapter logs]<span class="comment"># </span></span><br></pre></td></tr></table></figure>
+<p><img src="http://image.icool8.cn/blog/20200618/mzYmFIiEIXI1.png?imageslim" alt="mark"></p>
+<p>说明：</p>
+<ul>
+<li><strong>Compiled：</strong>编译数量。</li>
+<li><strong>Failed：</strong>失败数量</li>
+<li><strong>Invalid：</strong>不可用数量</li>
+<li><strong>Time：</strong>时间</li>
+<li><strong>FailedType：</strong>失败类型</li>
+<li><strong>FailedMethod：</strong>失败的方法</li>
+</ul>
+<p>采用jmap -histo pid&gt;a.log日志将其保存，在一段时间后，使用文本对比工具，可以对比出GC回收了哪些对象。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 将类实例数目情况导出在文件里</span></span><br><span class="line">[root@crmadapter logs]<span class="comment"># jmap -histo:live 5274 &gt; jmap-histo.log</span></span><br><span class="line">[root@crmadapter logs]<span class="comment"># ls</span></span><br><span class="line">error.log  jmap-histo.log  jstack-9430.txt  log.log</span><br></pre></td></tr></table></figure>
+<h4 id="3、垃圾回收统计-gc"><a href="#3、垃圾回收统计-gc" class="headerlink" title="3、垃圾回收统计-gc"></a>3、垃圾回收统计-gc</h4><p>-gc:垃圾回收统计</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@crmadapter logs]<span class="comment"># jstat -gc 5274 1000 5</span></span><br><span class="line"> S0C    S1C    S0U    S1U      EC       EU        OC         OU       MC     MU    CCSC   CCSU   YGC     YGCT    FGC    FGCT     GCT   </span><br><span class="line">6336.0 6464.0 5456.0  0.0   336576.0 330287.0  699072.0   78680.4     -      -      -      -    353101 3967.150  46    166.595 4133.746</span><br><span class="line">6336.0 6464.0 5456.0  0.0   336576.0 332650.6  699072.0   78680.4     -      -      -      -    353101 3967.150  46    166.595 4133.746</span><br><span class="line">6336.0 6464.0 5456.0  0.0   336576.0 336127.8  699072.0   78680.4     -      -      -      -    353101 3967.150  46    166.595 4133.746</span><br><span class="line">6656.0 5568.0  0.0   5520.0 336576.0  6263.4   699072.0   78680.4     -      -      -      -    353102 3967.165  46    166.595 4133.760</span><br><span class="line">6656.0 5568.0  0.0   5520.0 336576.0  9482.7   699072.0   78680.4     -      -      -      -    353102 3967.165  46    166.595 4133.760</span><br><span class="line">[root@crmadapter logs]<span class="comment"># </span></span><br></pre></td></tr></table></figure>
+<p><img src="http://image.icool8.cn/blog/20200618/gGhBBLRFEAvr.png?imageslim" alt="mark"></p>
+<p>说明</p>
+<ul>
+<li><strong>S0C：</strong>第一个幸存区的大小</li>
+<li><strong>S1C：</strong>第二个幸存区的大小</li>
+<li><strong>S0U：</strong>第一个幸存区的使用大小</li>
+<li><strong>S1U：</strong>第二个幸存区的使用大小</li>
+<li><strong>EC：</strong>伊甸园区的大小</li>
+<li><strong>EU：</strong>伊甸园区的使用大小</li>
+<li><strong>OC：</strong>老年代大小</li>
+<li><strong>OU：</strong>老年代使用大小</li>
+<li><strong>MC：</strong>方法区大小</li>
+<li><strong>MU：</strong>方法区使用大小</li>
+<li>**CCSC:**压缩类空间大小</li>
+<li>**CCSU:**压缩类空间使用大小</li>
+<li><strong>YGC：</strong>年轻代垃圾回收次数</li>
+<li><strong>YGCT：</strong>年轻代垃圾回收消耗时间</li>
+<li><strong>FGC：</strong>老年代垃圾回收次数</li>
+<li><strong>FGCT：</strong>老年代垃圾回收消耗时间</li>
+<li><strong>GCT：</strong>垃圾回收消耗总时间</li>
+</ul>
+<h4 id="4、堆内存统计-gccapacity"><a href="#4、堆内存统计-gccapacity" class="headerlink" title="4、堆内存统计-gccapacity"></a>4、堆内存统计-gccapacity</h4><p>-gccapacity通过查看堆内存统计</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@crmadapter logs]<span class="comment"># jstat -gccapacity 5274 1000 5</span></span><br><span class="line"> NGCMN    NGCMX     NGC     S0C   S1C       EC      OGCMN      OGCMX       OGC         OC       MCMN     MCMX      MC     CCSMN    CCSMX     CCSC    YGC    FGC </span><br><span class="line">349504.0 349504.0 349504.0 6656.0 5568.0 336576.0   699072.0   699072.0   699072.0   699072.0        -        -        -        -        -        - 353102    46</span><br><span class="line">349504.0 349504.0 349504.0 6656.0 5568.0 336576.0   699072.0   699072.0   699072.0   699072.0        -        -        -        -        -        - 353102    46</span><br><span class="line">349504.0 349504.0 349504.0 6656.0 5568.0 336576.0   699072.0   699072.0   699072.0   699072.0        -        -        -        -        -        - 353102    46</span><br><span class="line">349504.0 349504.0 349504.0 6656.0 5568.0 336576.0   699072.0   699072.0   699072.0   699072.0        -        -        -        -        -        - 353102    46</span><br><span class="line">349504.0 349504.0 349504.0 6656.0 5568.0 336576.0   699072.0   699072.0   699072.0   699072.0        -        -        -        -        -        - 353102    46</span><br><span class="line">[root@crmadapter logs]<span class="comment">#</span></span><br></pre></td></tr></table></figure>
+<p><img src="http://image.icool8.cn/blog/20200618/Ws68NAs96hLt.png?imageslim" alt="mark"></p>
+<p>说明：</p>
+<ul>
+<li><strong>NGCMN：</strong>新生代最小容量</li>
+<li><strong>NGCMX：</strong>新生代最大容量</li>
+<li><strong>NGC：</strong>当前新生代容量</li>
+<li><strong>S0C：</strong>第一个幸存区大小</li>
+<li><strong>S1C：</strong>第二个幸存区的大小</li>
+<li><strong>EC：</strong>伊甸园区的大小</li>
+<li><strong>OGCMN：</strong>老年代最小容量</li>
+<li><strong>OGCMX：</strong>老年代最大容量</li>
+<li><strong>OGC：</strong>当前老年代大小</li>
+<li>**OC:**当前老年代大小</li>
+<li>**MCMN:**最小元数据容量</li>
+<li><strong>MCMX：</strong>最大元数据容量</li>
+<li><strong>MC：</strong>当前元数据空间大小</li>
+<li><strong>CCSMN：</strong>最小压缩类空间大小</li>
+<li><strong>CCSMX：</strong>最大压缩类空间大小</li>
+<li><strong>CCSC：</strong>当前压缩类空间大小</li>
+<li><strong>YGC：</strong>年轻代gc次数</li>
+<li><strong>FGC：</strong>老年代GC次数</li>
+</ul>
+<h4 id="4、新生代垃圾回收统计-gcnew"><a href="#4、新生代垃圾回收统计-gcnew" class="headerlink" title="4、新生代垃圾回收统计-gcnew"></a>4、新生代垃圾回收统计-gcnew</h4><p>-gcnew:新生代垃圾回收统计</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@crmadapter logs]<span class="comment"># jstat -gcnew 5274 1000 5</span></span><br><span class="line"> S0C    S1C    S0U    S1U   TT MTT  DSS      EC       EU     YGC     YGCT  </span><br><span class="line">6912.0 5760.0    0.0 5712.0 15  15 6912.0 335936.0 265545.7 353104 3967.195</span><br><span class="line">6912.0 5760.0    0.0 5712.0 15  15 6912.0 335936.0 265899.3 353104 3967.195</span><br><span class="line">6912.0 5760.0    0.0 5712.0 15  15 6912.0 335936.0 269284.1 353104 3967.195</span><br><span class="line">6912.0 5760.0    0.0 5712.0 15  15 6912.0 335936.0 269554.3 353104 3967.195</span><br><span class="line">6912.0 5760.0    0.0 5712.0 15  15 6912.0 335936.0 272892.4 353104 3967.195</span><br><span class="line">[root@crmadapter logs]<span class="comment"># </span></span><br></pre></td></tr></table></figure>
+<p><img src="http://image.icool8.cn/blog/20200618/BWdTMSpEWgJY.png?imageslim" alt="mark"></p>
+<p>说明：</p>
+<ul>
+<li><strong>S0C：</strong>第一个幸存区大小</li>
+<li><strong>S1C：</strong>第二个幸存区的大小</li>
+<li><strong>S0U：</strong>第一个幸存区的使用大小</li>
+<li><strong>S1U：</strong>第二个幸存区的使用大小</li>
+<li>**TT:**对象在新生代存活的次数</li>
+<li>**MTT:**对象在新生代存活的最大次数</li>
+<li>**DSS:**期望的幸存区大小</li>
+<li><strong>EC：</strong>伊甸园区的大小</li>
+<li><strong>EU：</strong>伊甸园区的使用大小</li>
+<li><strong>YGC：</strong>年轻代垃圾回收次数</li>
+<li><strong>YGCT：</strong>年轻代垃圾回收消耗时间</li>
+</ul>
+<h4 id="5、新生代内存统计-gcnewcapacity"><a href="#5、新生代内存统计-gcnewcapacity" class="headerlink" title="5、新生代内存统计-gcnewcapacity"></a>5、新生代内存统计-gcnewcapacity</h4><p>-gcnew:新生代内存统计</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@crmadapter logs]<span class="comment"># jstat -gcnewcapacity 5274 1000 5</span></span><br><span class="line">  NGCMN      NGCMX       NGC      S0CMX     S0C     S1CMX     S1C       ECMX        EC      YGC   FGC </span><br><span class="line">  349504.0   349504.0   349504.0 116480.0   6912.0 116480.0   7104.0   349376.0   335296.0 353105    46</span><br><span class="line">  349504.0   349504.0   349504.0 116480.0   6912.0 116480.0   7104.0   349376.0   335296.0 353105    46</span><br><span class="line">  349504.0   349504.0   349504.0 116480.0   6912.0 116480.0   7104.0   349376.0   335296.0 353105    46</span><br><span class="line">  349504.0   349504.0   349504.0 116480.0   6912.0 116480.0   7104.0   349376.0   335296.0 353105    46</span><br><span class="line">  349504.0   349504.0   349504.0 116480.0   6912.0 116480.0   7104.0   349376.0   335296.0 353105    46</span><br><span class="line">[root@crmadapter logs]<span class="comment"># </span></span><br></pre></td></tr></table></figure>
+<p><img src="http://image.icool8.cn/blog/20200618/6ocpSnBHvWcV.png?imageslim" alt="mark"></p>
+<ul>
+<li><strong>NGCMN：</strong>新生代最小容量</li>
+<li><strong>NGCMX：</strong>新生代最大容量</li>
+<li><strong>NGC：</strong>当前新生代容量</li>
+<li><strong>S0CMX：</strong>最大幸存1区大小</li>
+<li><strong>S0C：</strong>当前幸存1区大小</li>
+<li><strong>S1CMX：</strong>最大幸存2区大小</li>
+<li><strong>S1C：</strong>当前幸存2区大小</li>
+<li><strong>ECMX：</strong>最大伊甸园区大小</li>
+<li><strong>EC：</strong>当前伊甸园区大小</li>
+<li><strong>YGC：</strong>年轻代垃圾回收次数</li>
+<li><strong>FGC：</strong>老年代回收次数</li>
+</ul>
+<h4 id="6、老年代垃圾回收统计-gcold"><a href="#6、老年代垃圾回收统计-gcold" class="headerlink" title="6、老年代垃圾回收统计-gcold"></a>6、老年代垃圾回收统计-gcold</h4><p>-gcnew:老年代垃圾回收统计</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@crmadapter logs]<span class="comment"># jstat -gcold 5274 1000 5</span></span><br><span class="line">   MC       MU      CCSC     CCSU       OC          OU       YGC    FGC    FGCT     GCT   </span><br><span class="line">       -        -        -        -    699072.0     78680.4 353105    46  166.595 4133.805</span><br><span class="line">       -        -        -        -    699072.0     78680.4 353105    46  166.595 4133.805</span><br><span class="line">       -        -        -        -    699072.0     78680.4 353105    46  166.595 4133.805</span><br><span class="line">       -        -        -        -    699072.0     78680.4 353105    46  166.595 4133.805</span><br><span class="line">       -        -        -        -    699072.0     78680.4 353105    46  166.595 4133.805</span><br><span class="line">[root@crmadapter logs]<span class="comment"># </span></span><br></pre></td></tr></table></figure>
+<p>说明：</p>
+<ul>
+<li><strong>MC：</strong>方法区大小</li>
+<li><strong>MU：</strong>方法区使用大小</li>
+<li>**CCSC:**压缩类空间大小</li>
+<li>**CCSU:**压缩类空间使用大小</li>
+<li><strong>OC：</strong>老年代大小</li>
+<li><strong>OU：</strong>老年代使用大小</li>
+<li><strong>YGC：</strong>年轻代垃圾回收次数</li>
+<li><strong>FGC：</strong>老年代垃圾回收次数</li>
+<li><strong>FGCT：</strong>老年代垃圾回收消耗时间</li>
+<li><strong>GCT：</strong>垃圾回收消耗总时间</li>
+</ul>
+<h4 id="7、老年代内存统计-gcoldcapacity"><a href="#7、老年代内存统计-gcoldcapacity" class="headerlink" title="7、老年代内存统计-gcoldcapacity"></a>7、老年代内存统计-gcoldcapacity</h4><p>-gcnew:老年代内存统计</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@crmadapter logs]<span class="comment"># jstat -gcoldcapacity 5274 1000 5</span></span><br><span class="line">   OGCMN       OGCMX        OGC         OC       YGC   FGC    FGCT     GCT   </span><br><span class="line">   699072.0    699072.0    699072.0    699072.0 353106    46  166.595 4133.861</span><br><span class="line">   699072.0    699072.0    699072.0    699072.0 353106    46  166.595 4133.861</span><br><span class="line">   699072.0    699072.0    699072.0    699072.0 353106    46  166.595 4133.861</span><br><span class="line">   699072.0    699072.0    699072.0    699072.0 353106    46  166.595 4133.861</span><br><span class="line">   699072.0    699072.0    699072.0    699072.0 353106    46  166.595 4133.861</span><br><span class="line">[root@crmadapter logs]<span class="comment">#</span></span><br></pre></td></tr></table></figure>
+<p>说明：</p>
+<ul>
+<li><strong>OGCMN：</strong>老年代最小容量</li>
+<li><strong>OGCMX：</strong>老年代最大容量</li>
+<li><strong>OGC：</strong>当前老年代大小</li>
+<li><strong>OC：</strong>老年代大小</li>
+<li><strong>YGC：</strong>年轻代垃圾回收次数</li>
+<li><strong>FGC：</strong>老年代垃圾回收次数</li>
+<li><strong>FGCT：</strong>老年代垃圾回收消耗时间</li>
+<li><strong>GCT：</strong>垃圾回收消耗总时间</li>
+</ul>
+<h4 id="8、元数据空间统计-gcmetacapacity"><a href="#8、元数据空间统计-gcmetacapacity" class="headerlink" title="8、元数据空间统计-gcmetacapacity"></a>8、元数据空间统计-gcmetacapacity</h4><p>-gcmetacapacity ：元数据空间统计</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@crmadapter logs]<span class="comment"># jstat -gcmetacapacity 5274 1000 5</span></span><br><span class="line">   MCMN       MCMX        MC       CCSMN      CCSMX       CCSC     YGC   FGC    FGCT     GCT   </span><br><span class="line">         -          -          -          -          -          - 353106    46  166.595 4133.861</span><br><span class="line">         -          -          -          -          -          - 353106    46  166.595 4133.861</span><br><span class="line">         -          -          -          -          -          - 353106    46  166.595 4133.861</span><br><span class="line">         -          -          -          -          -          - 353106    46  166.595 4133.861</span><br><span class="line">         -          -          -          -          -          - 353106    46  166.595 4133.861</span><br><span class="line">[root@crmadapter logs]<span class="comment"># </span></span><br></pre></td></tr></table></figure>
+<p>说明：</p>
+<ul>
+<li><strong>MCMN:</strong> 最小元数据容量</li>
+<li><strong>MCMX：</strong>最大元数据容量</li>
+<li><strong>MC：</strong>当前元数据空间大小</li>
+<li><strong>CCSMN：</strong>最小压缩类空间大小</li>
+<li><strong>CCSMX：</strong>最大压缩类空间大小</li>
+<li><strong>CCSC：</strong>当前压缩类空间大小</li>
+<li><strong>YGC：</strong>年轻代垃圾回收次数</li>
+<li><strong>FGC：</strong>老年代垃圾回收次数</li>
+<li><strong>FGCT：</strong>老年代垃圾回收消耗时间</li>
+<li><strong>GCT：</strong>垃圾回收消耗总时间</li>
+</ul>
+<h4 id="9、总垃圾回收统计-gcutil"><a href="#9、总垃圾回收统计-gcutil" class="headerlink" title="9、总垃圾回收统计-gcutil"></a>9、总垃圾回收统计-gcutil</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@crmadapter logs]<span class="comment"># jstat -gcutil 5274</span></span><br><span class="line">  S0     S1     E      O      M     CCS    YGC     YGCT    FGC    FGCT     GCT   </span><br><span class="line"> 81.03   0.00  55.36  11.29      -      - 353107 3967.301    46  166.595 4133.896</span><br><span class="line">[root@crmadapter logs]<span class="comment">#</span></span><br></pre></td></tr></table></figure>
+<p>说明：</p>
+<ul>
+<li><strong>S0：</strong>幸存1区当前使用比例</li>
+<li><strong>S1：</strong>幸存2区当前使用比例</li>
+<li><strong>E：</strong>伊甸园区使用比例</li>
+<li><strong>O：</strong>老年代使用比例</li>
+<li><strong>M：</strong>元数据区使用比例</li>
+<li><strong>CCS：</strong>压缩使用比例</li>
+<li><strong>YGC：</strong>年轻代垃圾回收次数</li>
+<li><strong>FGC：</strong>老年代垃圾回收次数</li>
+<li><strong>FGCT：</strong>老年代垃圾回收消耗时间</li>
+<li><strong>GCT：</strong>垃圾回收消耗总时间</li>
+</ul>
+<h4 id="10、JVM编译方法统计-printcompilation"><a href="#10、JVM编译方法统计-printcompilation" class="headerlink" title="10、JVM编译方法统计-printcompilation"></a>10、JVM编译方法统计-printcompilation</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@crmadapter logs]<span class="comment"># jstat -printcompilation 5274</span></span><br><span class="line">Compiled  Size  Type Method</span><br><span class="line">    5515    758    1 com/jd/jsf/gd/registry/jsf/JSFRegistryHelper httpGet</span><br><span class="line">[root@crmadapter logs]<span class="comment"># </span></span><br></pre></td></tr></table></figure>
+<p>说明：</p>
+<ul>
+<li><strong>Compiled：</strong>最近编译方法的数量</li>
+<li><strong>Size：</strong>最近编译方法的字节码数量</li>
+<li><strong>Type：</strong>最近编译方法的编译类型。</li>
+<li><strong>Method：</strong>方法名标识。</li>
+</ul>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">Jia Xufeng</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://icool8.cn/2017/10/30/Blog/java/JVM%E8%99%9A%E6%8B%9F%E6%9C%BA/%EF%BC%88%E5%85%AB%EF%BC%89JVM%E8%B0%83%E4%BC%98-jstat%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8/">https://icool8.cn/2017/10/30/Blog/java/JVM%E8%99%9A%E6%8B%9F%E6%9C%BA/%EF%BC%88%E5%85%AB%EF%BC%89JVM%E8%B0%83%E4%BC%98-jstat%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/java/">java</a><a class="post-meta__tags" href="/tags/jvm/">jvm</a></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2017/11/07/Blog/java/%E5%85%B3%E4%BA%8ERESTfulAPI/"><i class="fa fa-chevron-left">  </i><span>关于RESTfulAPI</span></a></div><div class="next-post pull-right"><a href="/2017/10/19/Blog/java/JVM%E8%99%9A%E6%8B%9F%E6%9C%BA/%EF%BC%88%E4%B8%83%EF%BC%89JVM%E8%B0%83%E4%BC%98-jmap%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8/"><span>（七）JVM调优-jmap工具的使用.</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2021 By Jia Xufeng</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.7.0"></script><script src="/js/fancybox.js?version=1.7.0"></script><script src="/js/sidebar.js?version=1.7.0"></script><script src="/js/copy.js?version=1.7.0"></script><script src="/js/fireworks.js?version=1.7.0"></script><script src="/js/transition.js?version=1.7.0"></script><script src="/js/scroll.js?version=1.7.0"></script><script src="/js/head.js?version=1.7.0"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script></body></html>
